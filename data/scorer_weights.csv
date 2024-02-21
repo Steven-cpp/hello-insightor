@@ -1,0 +1,3 @@
+StrategyName,EmployeeNumber,KeyDevelopmentNumber,ManagerDensity,ManagerNumber,ManagerQuality,PitchbookGrowthRate,PitchbookSizeMultiple,QualityFactor,StrategyAgeDistance,StrategySizeDistance,WeightedKeyDevelopmentNumber,Revenue1YearTotal,Revenue2YearGrowthRate,Revenue3YearGrowthRate,EmployeeEstimatedGrowthRate,ManagerDataAvailable,IndustryNFit,DealStageNFit,FundraiseInactivity,FounderScore,RaisedBeyondAvg,ManagerQualityEst,ManagerQualityTrendEst,GrossMarginInd,EBITDAMarginInd,EBITMarginInd,LeverageInd,RevenueInd,RevenueGrowthInd
+ScoreP1,1,0.5,0.1,1,1,1,0.5,0.2,1,1,1,0.5,1,0.5,0.5,1,1,0,0,0.1,0.5,0,1,0,1,0,-0.5,0,1
+ScoreP3,0,0,0.1,1,1,1,0.5,0.2,1,1,1,0,0,0,1,0,1,1,1,0.1,0.5,0,1,0,0,0,0,0,0
