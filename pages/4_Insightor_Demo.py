@@ -22,6 +22,7 @@ Widgets
     - graph: score distribution
 """
 
+import glob
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -62,7 +63,7 @@ WEIGHT_COL  = WEIGHT_MAP.keys()
 SCORING_COL  = WEIGHT_MAP.values()
 
 df_weights = pd.read_csv('./data/scorer_weights.csv')
-df = pd.read_csv('./data/scorer_debug_merged.csv')
+df = pd.read_csv('./data/scorer_debug_merged_v2.csv')
 df = df.iloc[:, 2:]
 
 # Sidebar - Navigation Bar
@@ -74,7 +75,7 @@ STRATEGY_MAP = {"ScoreP1": 0, "ScoreP3": 1}
 
 # Display sliders for weights, default values from `weights` list
 weightMap = df_weights.loc[STRATEGY_MAP[score_select]].drop(STRATEGYNAME_COL).astype(float).items()
-weightMap = sorted(weightMap, key=lambda item: abs(item[1]), reverse=True)
+# weightMap = sorted(weightMap, key=lambda item: abs(item[1]), reverse=True)
 scorer_col = []
 for weight, value in weightMap:
     scorer_col.append(WEIGHT_MAP[weight])
@@ -100,8 +101,19 @@ if st.sidebar.button('AutoFT'):
 # Main Page
 st.title("Score Debugging App")
 
+dir = './data/'
+fname = 'scorer_debug_merged*'
+# List all files in the current directory starting with 'merged'
+bm_list = map(lambda x: x.split('/')[-1], glob.glob(dir + fname))
+
+bm = st.selectbox(
+    'Which benchmark you would like to compare',
+    bm_list, index=None)
+
 # Multi-select for columns to show
 options = st.multiselect('Select columns to show', df.columns, default=col_default)
+
+
 
 # Display dataframe with selected columns
 st.dataframe(df[options])
@@ -119,8 +131,39 @@ chart = alt.Chart(data).mark_bar(opacity=0.3).encode(
 ).properties(
     title='Score Distribution'
 )
-
 st.altair_chart(chart, use_container_width=True)
+
+
+NEW_COLS = ['GrossMarginInd_normalized', 'EBITDAMarginInd_normalized', 'EBITMarginInd_normalized', 'LeverageInd_normalized', 'RevenueInd_normalized', 'RevenueGrowthInd_normalized']
+data_comp = df[NEW_COLS].astype(float)
+data_binned = pd.DataFrame()
+
+# Bin the data into 5 bins for each score
+bins = 5
+labels = ['< 0.2', '[0.2, 0.4)', '[0.4, 0.6)', '[0.6, 0.8)', '>= 0.8']
+for column in data_comp.columns:
+    if (pd.notna(data_comp[column]).sum() < bins):
+        continue
+    data_binned[column + "_bin"] = pd.cut(data_comp[column].to_numpy(), bins, labels=[labels[i] for i in range(bins)])
+
+# Transform the data to a long format suitable for Altair
+df_long = pd.melt(data_binned, value_vars=[column for column in data_binned.keys()], var_name='ScoreType', value_name='Bin')
+
+# # Count the occurrences in each bin for each score type
+# df_long['Count'] = 1
+# df_grouped = df_long.groupby(['ScoreType', 'Bin']).count().reset_index()
+
+# Create a stacked bar chart
+barChart = alt.Chart(df_long).mark_bar().encode(
+    x='ScoreType:N',
+    y=alt.Y('count()', stack='zero'),
+    color='Bin:N'
+).properties(
+    height=500,
+    title='Key Financials Composition'
+)
+
+st.altair_chart(barChart, use_container_width=True)
 
 ## creating AgGrid dynamic table and setting configurations
 # gb = GridOptionsBuilder.from_dataframe(df_filtered)
