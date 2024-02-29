@@ -23,11 +23,12 @@ Widgets
 """
 
 import glob
+import yaml
 import streamlit as st
 import pandas as pd
 import numpy as np
 import altair as alt
-import yaml
+import plotly.express as px
 
 # Function to load configurations from a YAML file
 def load_config(config_path):
@@ -67,7 +68,6 @@ def configure_sidebar(df_weights):
                 df_weights.loc[STRATEGY_MAP[score_type], weight] = st.sidebar.slider(weight, min_value=-1.0, max_value=0.0, value=value, step=0.01)
     return score_type
 
-@st.cache_data
 def calculate_scores(df, df_weights, score_type):
     """Calculate ScoreDebug and BM difference
 
@@ -144,8 +144,15 @@ def plot_score_comp(df, cols):
     st.altair_chart(barChart, use_container_width=True)
 
 
-def plot_corr_mat():
-    pass
+def plot_corr_mat(df):
+    SCORING_COL = WEIGHT_MAP.values()
+    CORR_COL = list(SCORING_COL) + ['Score']
+    df_corr = df[CORR_COL]
+    df_corr.columns = [i.split('_')[0] for i in df_corr.columns]
+    corr = df_corr.corr().loc[:, ['Score', 'Quality', 'ManagerQuality']]
+    corr = corr.round(decimals=2)
+    fig = px.imshow(corr, text_auto=True, aspect="auto", height=800)
+    st.plotly_chart(fig, theme="streamlit")
 
 # Main page configuration
 def configure_main_page(df, df_weights, score_type, prefix_delta='Δ'):
@@ -168,13 +175,14 @@ def configure_main_page(df, df_weights, score_type, prefix_delta='Δ'):
     KEY_FIN_COLS = ['GrossMarginInd_normalized', 'EBITDAMarginInd_normalized', 'EBITMarginInd_normalized', 'LeverageInd_normalized', 'RevenueInd_normalized', 'RevenueGrowthInd_normalized']
     plot_score_comp(df, KEY_FIN_COLS)
     
+    plot_corr_mat(df)
+    
 
 # Main function to run the app
 def main():
     df, df_weights = load_data()
     score_select = configure_sidebar(df_weights)
     configure_main_page(df, df_weights, score_select)
-
 
 if __name__ == "__main__":
     main()
