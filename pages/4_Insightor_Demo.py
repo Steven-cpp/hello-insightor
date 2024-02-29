@@ -146,12 +146,12 @@ def plot_score_comp(df, cols):
 
 def plot_corr_mat(df):
     SCORING_COL = WEIGHT_MAP.values()
-    CORR_COL = list(SCORING_COL) + ['Score']
+    CORR_COL = list(SCORING_COL) + ['Score', 'ScoreDebug']
     df_corr = df[CORR_COL]
     df_corr.columns = [i.split('_')[0] for i in df_corr.columns]
-    corr = df_corr.corr().loc[:, ['Score', 'Quality', 'ManagerQuality']]
+    corr = df_corr.corr().loc[:, ['Score', 'ScoreDebug', 'Quality', 'ManagerQuality']]
     corr = corr.round(decimals=2)
-    fig = px.imshow(corr, text_auto=True, aspect="auto", height=800)
+    fig = px.imshow(corr, text_auto=True, aspect="auto", title="Key Components Correlation Matrix", height=800)
     st.plotly_chart(fig, theme="streamlit")
 
 # Main page configuration
