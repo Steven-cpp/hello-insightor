@@ -62,7 +62,7 @@ def configure_sidebar(df_weights):
     for weight, value in weightMap:
         if weight in WEIGHT_MAP:
             if value >= 0:
-                df_weights.loc[STRATEGY_MAP[score_type], weight] = st.sidebar.slider(weight, min_value=0.0, max_value=3.0, value=value, step=0.01)
+                df_weights.loc[STRATEGY_MAP[score_type], weight] = st.sidebar.slider(weight, min_value=0.0, max_value=1.0, value=value, step=0.01)
             else:
                 df_weights.loc[STRATEGY_MAP[score_type], weight] = st.sidebar.slider(weight, min_value=-1.0, max_value=0.0, value=value, step=0.01)
     return score_type
