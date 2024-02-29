@@ -1,0 +1,40 @@
+WEIGHT_MAP:
+  QualityFactor: Quality_Factor_Normalized
+  EmployeeNumber: EmployeeNumber_normalized
+  Revenue1YearTotal: Revenue1YearTotal_normalized
+  StrategySizeDistance: TargetAgeDistance_normalized
+  StrategyAgeDistance: TargetSizeDistance_normalized
+  Revenue2YearGrowthRate: Revenue2YearGrowthRate_normalized
+  Revenue3YearGrowthRate: Revenue3YearGrowthRate_normalized
+  PitchbookSizeMultiple: PitchbookSizeMultiple_normalized
+  PitchbookGrowthRate: PitchbookGrowthRate_normalized
+  ManagerDensity: ManagerDensity_normalized
+  ManagerQuality: ManagerQuality_normalized
+  ManagerNumber: ManagerNumber_normalized
+  EmployeeEstimatedGrowthRate: EmployeeEstimatedGrowthRate_normalized
+  KeyDevelopmentNumber: KeyDevelopmentNumber_normalized
+  WeightedKeyDevelopmentNumber: WeightedKeyDevelopmentNumber_normalized
+  ManagerDataAvailable: ManagerDataAvailable_normalized
+  IndustryNFit: IndustryNFit_normalized
+  DealStageNFit: DealStageNFit_normalized
+  FundraiseInactivity: FundraiseInactivity_normalized
+  FounderScore: FounderScore_normalized
+  RaisedBeyondAvg: RaisedBeyondAvg_normalized
+  ManagerQualityEst: ManagersQualityEst_normalized
+  ManagerQualityTrendEst: ManagersQualityTrendEst_normalized
+  GrossMarginInd: GrossMarginInd_normalized
+  EBITDAMarginInd: EBITDAMarginInd_normalized
+  EBITMarginInd: EBITMarginInd_normalized
+  LeverageInd: LeverageInd_normalized
+  RevenueInd: RevenueInd_normalized
+  RevenueGrowthInd: RevenueGrowthInd_normalized
+
+STRATEGY_MAP:
+  ScoreP1: 0
+  ScoreP3: 1
+
+DATA_DIR: './data/'
+FN_BM_PATTERN: scorer_debug_merged*
+FN_SCORER_WEIGHTS: scorer_weights_prd.csv
+
+
