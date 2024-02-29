@@ -49,7 +49,7 @@ bm_list = sorted(map(lambda x: x.split('/')[-1], glob.glob(DATA_DIR + FN_BM_PATT
 def load_data():
     df_weights = pd.read_csv(DATA_DIR + FN_SCORER_WEIGHTS)
     df_weights.fillna(0, inplace=True)
-    df = pd.read_csv(DATA_DIR + 'scorer_debug_merged_prd_v2.csv', index_col='Id').iloc[:, 1:]
+    df = pd.read_csv(DATA_DIR + 'scorer_debug_merged_prd.csv', index_col='Id').iloc[:, 1:]
     # df = pd.read_csv(DATA_DIR + bm_list[-1], index_col='Id').iloc[:, 1:]
     return df, df_weights
 
