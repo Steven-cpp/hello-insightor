@@ -35,6 +35,6 @@ STRATEGY_MAP:
 
 DATA_DIR: './data/'
 FN_BM_PATTERN: scorer_debug_merged*
-FN_SCORER_WEIGHTS: scorer_weights_prd.csv
+FN_SCORER_WEIGHTS: scorer_weights.csv
 
 

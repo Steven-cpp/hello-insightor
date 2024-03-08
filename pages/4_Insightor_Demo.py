@@ -30,6 +30,8 @@ import numpy as np
 import altair as alt
 import plotly.express as px
 
+pd.set_option("styler.render.max_elements", 505382)
+
 # Function to load configurations from a YAML file
 def load_config(config_path):
     with open(config_path, "r", encoding='ascii') as file:
@@ -45,12 +47,18 @@ DATA_DIR = config["DATA_DIR"]
 FN_SCORER_WEIGHTS = config["FN_SCORER_WEIGHTS"]
 bm_list = sorted(map(lambda x: x.split('/')[-1], glob.glob(DATA_DIR + FN_BM_PATTERN)))
 
+def _format_arrow(val):
+    return f"{'↑' if val > 0 else '↓'} {abs(val):.0f}%" if val != 0 else f"{val:.0f}%"
+
+def _color_arrow(val):
+    return "color: green" if val > 0 else "color: red" if val < 0 else "color: black"
+
 # Load data
 @st.cache_data
 def load_data():
     df_weights = pd.read_csv(DATA_DIR + FN_SCORER_WEIGHTS)
     df_weights.fillna(0, inplace=True)
-    df = pd.read_csv(DATA_DIR + 'scorer_debug_merged_prd_v3.csv', index_col='Id').iloc[:, 1:]
+    df = pd.read_csv(DATA_DIR + 'scorer_debug_merged_prd_v5_sample.csv', index_col='Id').iloc[:, 1:]
     # df = pd.read_csv(DATA_DIR + bm_list[-1], index_col='Id').iloc[:, 1:]
     return df, df_weights
 
@@ -166,6 +174,7 @@ def configure_main_page(df, df_weights, score_type, prefix_delta='Δ'):
     if df_delta is not None:
         col_delta = [f'{prefix_delta}{i}' for i in options if f'{prefix_delta}{i}' in df_delta.columns]
         df_res = pd.merge(df[options], df_delta[col_delta], how='left', left_index=True, right_index=True)
+        # df_res = df_res.style.format(_format_arrow, subset=col_delta).applymap(_color_arrow, subset=col_delta)
         st.dataframe(df_res)
     else:
         st.dataframe(df[options])
